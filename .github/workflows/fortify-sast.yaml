@@ -1,0 +1,56 @@
+name: OpenText Core Application Security Scan
+on:
+  push:
+    branches: [ $default-branch, $protected-branches ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ $default-branch ]
+jobs:
+  fortify:
+    runs-on: ubuntu-latest
+    permissions: # When overriding default permissions, following are required
+      contents: read
+      security-events: write
+      pull-requests: write     # Required if DO_PR_COMMENT is set to true
+    steps:
+      # Check out source code
+      - name: Check Out Source Code
+        uses: actions/checkout@v4
+      # Run Fortify Scan
+      - name: Run Fortify Scan
+        uses: fortify/github-action@v3
+        with:
+          sast-scan: true
+          debricked-sca-scan: true # For FoD, run an open-source scan as part of the SAST scan (ignored if SAST scan is disabled).
+        env:
+          FOD_URL: ${vars.FOD_URL}  # Must be hardcoded or configured through GitHub variable, not secret
+          # Either tenant/user/password or client id/secret are required
+          FOD_CLIENT_ID: ${{secrets.FOD_CLIENT_ID}}
+          FOD_CLIENT_SECRET: ${{secrets.FOD_CLIENT_SECRET}}
+          # FOD_TENANT: ${{secrets.FOD_TENANT}}
+          # FOD_USER: ${{secrets.FOD_USER}}
+          # FOD_PASSWORD: ${{secrets.FOD_PAT}}
+          
+          ### Optional configuration
+          FOD_LOGIN_EXTRA_OPTS: --socket-timeout=60s     # Extra 'fcli fod session login' options
+          # FOD_RELEASE: MyApp:MyRelease                 # FoD release name, default: <org>/<repo>:<branch>
+          DO_SETUP: true                                 # Setup FoD application, release & static scan configuration
+          # SETUP_ACTION: <URL or file>                  # Customize setup action
+          # SETUP_EXTRA_OPTS: --copy-from "${{ github.repository }}:${{ github.event.repository.default_branch }}" # Pass extra options to setup action:
+          SETUP_EXTRA_OPTS: --skip-if-exists --oss --assessment-type Static Assessment --entitlement-frequency Subscription --entitlement-id ${{ vars.FOD_ENTITLEMENT }} 
+          PACKAGE_EXTRA_OPTS: -oss                 # Extra 'scancentral package' options
+          FOD_SAST_SCAN_EXTRA_OPTS:                      # Extra 'fcli fod sast-scan start' options
+          DO_WAIT: true                                  # Wait for successful scan completion (implied if post-scan actions enabled)
+          DO_POLICY_CHECK: true                          # Fail pipeline if security policy outcome is FAIL
+          # POLICY_CHECK_ACTION: <URL or file>             # Customize security policy checks
+          # POLICY_CHECK_EXTRA_OPTS: --on-unsigned=ignore  # Pass extra options to policy check action
+          # DO_JOB_SUMMARY: true                           # Generate workflow job summary
+          # JOB_SUMMARY_ACTION: <URL or file>              # Customize job summary
+          # JOB_SUMMARY_EXTRA_OPTS: --on-unsigned=ignore   # Pass extra options to job summary action
+          DO_PR_COMMENT: true                            # Generate PR comments, only used on pull_request triggers
+          # PR_COMMENT_ACTION: <URL or file>               # Customize PR comments
+          # PR_COMMENT_EXTRA_OPTS: --on-unsigned=ignore    # Pass extra options to PR comment action
+          # DO_EXPORT: true                                # Export vulnerability data to GitHub code scanning dashboard
+          # EXPORT_ACTION: <URL or file>                   # Customize export action
+          # EXPORT_EXTRA_OPTS: --on-unsigned=ignore        # Pass extra options to export action
+          # TOOL_DEFINITIONS: <URL>                        # URL from where to retrieve Fortify tool definitions
