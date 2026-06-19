@@ -29,7 +29,7 @@ jobs:
           
           ### Optional configuration
           FOD_LOGIN_EXTRA_OPTS: --socket-timeout=60s     # Extra 'fcli fod session login' options
-          # FOD_RELEASE: MyApp:MyRelease                 # FoD release name, default: <org>/<repo>:<branch>
+          FOD_RELEASE: ${{ github.event.repository.name }}:${{ github.ref_name }} # FoD release name, default: <org>/<repo>:<branch>
           DO_SETUP: true                                 # Setup FoD application, release & static scan configuration
           # SETUP_ACTION: <URL or file>                  # Customize setup action
           # SETUP_EXTRA_OPTS: --copy-from "${{ github.repository }}:${{ github.event.repository.default_branch }}" # Pass extra options to setup action:
