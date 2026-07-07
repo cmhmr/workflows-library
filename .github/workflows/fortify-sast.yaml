@@ -43,7 +43,7 @@ jobs:
         uses: fortify/github-action@v3
         with:
           sast-scan: true
-          debricked-sca-scan: true # For FoD, run an open-source scan as part of the SAST scan (ignored if SAST scan is disabled).
+          # debricked-sca-scan: true # For FoD, run an open-source scan as part of the SAST scan (ignored if SAST scan is disabled).
         env:
           FOD_URL: ${{ vars.FOD_URL }}  # Must be Through GitHub variable, not secret
           # Either tenant/user/password or client id/secret are required
