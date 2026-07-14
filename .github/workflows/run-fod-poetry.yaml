@@ -10,29 +10,17 @@ on:
         description: Release SDLC Status
         required: false
         default: "Development"
-        type: choice
-        options:
-        - "Development"
-        - "QA"
-        - "Production"
-        - "Retired"
+        type: string
       application-type:
         description: Application Type
         required: false
         default: "Web_Thick_Client"
-        type: choice
-        options:
-          - "Web_Thick_Client"
-          - "Mobile"
+        type: string
       application-criticality:
         description: Application Criticality Level
         required: false
         default: "Medium"
-        type: choice
-        options:
-          - "High"
-          - "Medium"
-          - "Low"
+        type: string
 jobs:
   fortify:
     runs-on: ubuntu-latest
@@ -47,7 +35,6 @@ jobs:
       # Run Fortify Scan
       - name: Run Core Application Security SAST/SCA Scans
         uses: ./.github/workflows/setup-fod.yaml
-        secrets: inherit
         with:
           sdlc-status: ${{ inputs.sdlc-status }}
           application-type: ${{ inputs.application-type }}
