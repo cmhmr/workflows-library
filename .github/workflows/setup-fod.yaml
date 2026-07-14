@@ -1,0 +1,34 @@
+name: Core Application Security SAST/SCA Scan
+inputs:
+  sdlc-status:
+    required: true
+  application-type:
+    required: true    
+  application-criticality:
+    required: true
+runs:
+  using: composite
+  permissions: # When overriding default permissions, following are required
+    contents: read
+    security-events: write
+    # pull-requests: write     # Required if DO_PR_COMMENT is set to true
+  steps:
+    - uses: fortify/github-action@v3
+      with:
+        sast-scan: true
+        debricked-sca-scan: true
+      env:
+        FOD_URL: ${{ vars.FOD_URL }}
+        FOD_CLIENT_ID: ${{ secrets.FOD_CLIENT_ID }}
+        FOD_CLIENT_SECRET: ${{ secrets.FOD_CLIENT_SECRET }}
+        FOD_LOGIN_EXTRA_OPTS: --socket-timeout=60s
+        FOD_RELEASE: ${{ github.event.repository.name }}:${{ github.ref_name }}
+        DO_SETUP: true
+        SETUP_EXTRA_OPTS: --oss --sdlc-status="${{ inputs.sdlc-status }}" --app-type="${{ inputs.application-type }}" --app-criticality="${{ inputs.app-criticality }}"
+        SAST_ASSESSMENT_TYPE: "Static Assessment"
+        FOD_SAST_SCAN_EXTRA_OPTS: --oss --entitlement-frequency="Subscription" --entitlement-id=${{ vars.FOD_ENTITLEMENT }}
+        DO_SCA_SCAN: true
+        PACKAGE_EXTRA_OPTS: -oss 
+        DO_WAIT: true
+        DO_POLICY_CHECK: true
+        # DO_PR_COMMENT: true
