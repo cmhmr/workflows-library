@@ -17,7 +17,7 @@ on:
       application-type:
         description: Application Type
         required: false
-        default: "Web_Thick_Client"
+        default: "Web"
         type: string
       application-criticality:
         description: Application Criticality Level
