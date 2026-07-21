@@ -17,16 +17,19 @@ on:
       application-type:
         description: Application Type
         required: false
-        default: "Web_Thick_Client" # Web_Thick_Client, Mobile
+        default: "Web_Thick_Client"
         type: string
       application-criticality:
         description: Application Criticality Level
         required: false
-        default: "Medium" # High, Medium, Low
+        default: "Medium"
         type: string
 jobs:
   fortify:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
     steps:
       - name: Check out Repository
         uses: actions/checkout@v6

@@ -10,9 +10,6 @@ inputs:
     required: true
 runs:
   using: composite
-  permissions:
-    contents: read
-    security-events: write
   steps:
     - uses: fortify/github-action@v3
       with:
