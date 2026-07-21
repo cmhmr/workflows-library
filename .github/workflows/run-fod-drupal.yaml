@@ -24,12 +24,12 @@ on:
         required: false
         default: "Medium"
         type: string
+permissions:
+  contents: read
+  security-events: write
 jobs:
   fortify:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      security-events: write
     steps:
       - name: Check out Repository
         uses: actions/checkout@v6
