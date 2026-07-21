@@ -24,9 +24,6 @@ on:
         required: false
         default: "Medium"
         type: string
-permissions:
-  contents: read
-  security-events: write
 jobs:
   fortify:
     runs-on: ubuntu-latest
