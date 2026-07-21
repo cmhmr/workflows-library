@@ -43,3 +43,8 @@ jobs:
           sdlc-status: ${{ inputs.sdlc-status }}
           application-type: ${{ inputs.application-type }}
           application-criticality: ${{ inputs.application-criticality }}
+        env:
+          FOD_URL: ${{ vars.FOD_URL }}
+          FOD_CLIENT_ID: ${{ secrets.FOD_CLIENT_ID }}
+          FOD_CLIENT_SECRET: ${{ secrets.FOD_CLIENT_SECRET }}
+          FOD_SAST_SCAN_EXTRA_OPTS: --oss --entitlement-frequency="Subscription" --entitlement-id=${{ vars.FOD_ENTITLEMENT }}

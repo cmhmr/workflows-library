@@ -16,15 +16,15 @@ runs:
         sast-scan: true
         debricked-sca-scan: true
       env:
-        FOD_URL: ${{ vars.FOD_URL }}
-        FOD_CLIENT_ID: ${{ secrets.FOD_CLIENT_ID }}
-        FOD_CLIENT_SECRET: ${{ secrets.FOD_CLIENT_SECRET }}
+        FOD_URL: ${{ env.FOD_URL }}
+        FOD_CLIENT_ID: ${{ env.FOD_CLIENT_ID }}
+        FOD_CLIENT_SECRET: ${{ env.FOD_CLIENT_SECRET }}
         FOD_LOGIN_EXTRA_OPTS: --socket-timeout=60s
         FOD_RELEASE: ${{ github.event.repository.name }}:${{ inputs.release-name }}
         DO_SETUP: true
         SETUP_EXTRA_OPTS: --oss --sdlc-status="${{ inputs.sdlc-status }}" --app-type="${{ inputs.application-type }}" --app-criticality="${{ inputs.application-criticality }}"
         SAST_ASSESSMENT_TYPE: "Static Assessment"
-        FOD_SAST_SCAN_EXTRA_OPTS: --oss --entitlement-frequency="Subscription" --entitlement-id=${{ vars.FOD_ENTITLEMENT }}
+        FOD_SAST_SCAN_EXTRA_OPTS: ${{ env.FOD_SAST_SCAN_EXTRA_OPTS }}
         DO_SCA_SCAN: true
         PACKAGE_EXTRA_OPTS: -oss
         DO_WAIT: true
