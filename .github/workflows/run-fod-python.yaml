@@ -32,12 +32,12 @@ jobs:
         uses: actions/checkout@v6
       # Setup Poetry
       - name: Setup Poetry for Python ${{ inputs.python-version }}
-        uses: ../actions/setup-python.yaml
+        uses: cmhmr/workflows-library/.github/actions/setup-python.yaml@main
         with:
           python-version: ${{ inputs.python-version }}
       # Run Fortify Scan
       - name: Run Core Application Security SAST/SCA Scans
-        uses: ../actions/setup-fod.yaml
+        uses: cmhmr/workflows-library/.github/actions/setup-fod.yaml@main
         with:
           release-name: ${{ inputs.release-name }}
           sdlc-status: ${{ inputs.sdlc-status }}
