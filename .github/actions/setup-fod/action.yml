@@ -26,6 +26,6 @@ runs:
         SAST_ASSESSMENT_TYPE: "Static Assessment"
         FOD_SAST_SCAN_EXTRA_OPTS: ${{ env.FOD_SAST_SCAN_EXTRA_OPTS }}
         DO_SCA_SCAN: true
-        PACKAGE_EXTRA_OPTS: -oss
+        # PACKAGE_EXTRA_OPTS: -oss
         DO_WAIT: true
         DO_POLICY_CHECK: true
