@@ -1,0 +1,13 @@
+name: Setup Drupal
+inputs:
+  php-version:
+    required: false
+    default: '8.3'
+runs:
+  using: composite
+  steps:
+    - name: Setup Drupal
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.3'
+        extensions: mbstring, gd, curl, dom, xml, zip

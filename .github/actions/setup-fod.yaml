@@ -1,5 +1,7 @@
 name: Core Application Security SAST/SCA Scan
 inputs:
+  release-name:
+    required: true
   sdlc-status:
     required: true
   application-type:
@@ -22,9 +24,9 @@ runs:
         FOD_CLIENT_ID: ${{ secrets.FOD_CLIENT_ID }}
         FOD_CLIENT_SECRET: ${{ secrets.FOD_CLIENT_SECRET }}
         FOD_LOGIN_EXTRA_OPTS: --socket-timeout=60s
-        FOD_RELEASE: ${{ github.event.repository.name }}:${{ github.ref_name }}
+        FOD_RELEASE: ${{ github.event.repository.name }}:${{ inputs.release-name }}
         DO_SETUP: true
-        SETUP_EXTRA_OPTS: --oss --sdlc-status="${{ inputs.sdlc-status }}" --app-type="${{ inputs.application-type }}" --app-criticality="${{ inputs.app-criticality }}"
+        SETUP_EXTRA_OPTS: --oss --sdlc-status="${{ inputs.sdlc-status }}" --app-type="${{ inputs.application-type }}" --app-criticality="${{ inputs.application-criticality }}"
         SAST_ASSESSMENT_TYPE: "Static Assessment"
         FOD_SAST_SCAN_EXTRA_OPTS: --oss --entitlement-frequency="Subscription" --entitlement-id=${{ vars.FOD_ENTITLEMENT }}
         DO_SCA_SCAN: true

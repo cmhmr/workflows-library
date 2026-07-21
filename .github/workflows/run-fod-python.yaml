@@ -1,0 +1,45 @@
+name: AST Consumer with Poetry
+on:
+  workflow_call:
+    inputs:
+      release-name:
+        required: True
+        type: string
+      python-version:
+        required: false
+        default: "3.13"
+        type: string
+      sdlc-status:
+        description: Release SDLC Status
+        required: false
+        default: "Development"
+        type: string
+      application-type:
+        description: Application Type
+        required: false
+        default: "Web_Thick_Client"
+        type: string
+      application-criticality:
+        description: Application Criticality Level
+        required: false
+        default: "Medium"
+        type: string
+jobs:
+  fortify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Repository
+        uses: actions/checkout@v6
+      # Setup Poetry
+      - name: Setup Poetry for Python ${{ inputs.python-version }}
+        uses: cmhmr/workflows-library/.github/actions/setup-python.yaml
+        with:
+          python-version: ${{ inputs.python-version }}
+      # Run Fortify Scan
+      - name: Run Core Application Security SAST/SCA Scans
+        uses: cmhmr/workflows-library/.github/actions/setup-fod.yaml
+        with:
+          release-name: ${{ inputs.release-name }}
+          sdlc-status: ${{ inputs.sdlc-status }}
+          application-type: ${{ inputs.application-type }}
+          application-criticality: ${{ inputs.application-criticality }}

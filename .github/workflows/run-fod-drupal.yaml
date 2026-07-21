@@ -1,10 +1,13 @@
-name: AST Consumer with Poetry
+name: Fortify AST Workflow with Drupal for PHP Project Based
 on:
   workflow_call:
     inputs:
-      python-version:
+      release-name:
+        required: True
+        type: string
+      php-version:
         required: false
-        default: "3.13"
+        default: "8.3"
         type: string
       sdlc-status:
         description: Release SDLC Status
@@ -14,12 +17,12 @@ on:
       application-type:
         description: Application Type
         required: false
-        default: "Web_Thick_Client"
+        default: "Web_Thick_Client" # Web_Thick_Client, Mobile
         type: string
       application-criticality:
         description: Application Criticality Level
         required: false
-        default: "Medium"
+        default: "Medium" # High, Medium, Low
         type: string
 jobs:
   fortify:
@@ -28,14 +31,15 @@ jobs:
       - name: Check out Repository
         uses: actions/checkout@v6
       # Setup Poetry
-      - name: Setup Poetry for Python ${{ inputs.python-version }}
-        uses: ./.github/workflows/setup-poetry.yaml
+      - name: Setup Drupal for PHP ${{ inputs.php-version }}
+        uses: cmhmr/workflows-library/.github/actions/setup-drupal.yaml@main
         with:
-          python-version: ${{ inputs.python-version }}
+          php-version: ${{ inputs.php-version }}
       # Run Fortify Scan
       - name: Run Core Application Security SAST/SCA Scans
-        uses: ./.github/workflows/setup-fod.yaml
+        uses: cmhmr/workflows-library/.github/actions/setup-fod.yaml@main
         with:
+          release-name: ${{ inputs.release-name }}
           sdlc-status: ${{ inputs.sdlc-status }}
           application-type: ${{ inputs.application-type }}
           application-criticality: ${{ inputs.application-criticality }}
