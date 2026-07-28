@@ -44,7 +44,6 @@ runs:
           --app-type="${{ inputs.application-type }}"
           --app-criticality="${{ inputs.application-criticality }}"
           --app-description="${{ github.server_url }}/${{ github.repository }}"
-          # --app-notify=""
         SAST_ASSESSMENT_TYPE: "Static Assessment"
         FOD_SAST_SCAN_EXTRA_OPTS: |
           --oss
