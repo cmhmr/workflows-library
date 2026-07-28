@@ -52,7 +52,6 @@ runs:
           --notes="${{ github.sha }}"
         DO_SCA_SCAN: true
         PACKAGE_EXTRA_OPTS: |
-          -oss
           -exclude="**/tests/**"
           -exclude="**/node_modules/**"
           -exclude="**/.venv/**"
