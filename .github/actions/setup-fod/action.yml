@@ -1,13 +1,26 @@
 name: Core Application Security SAST/SCA Scan
 inputs:
+  fod-url:
+    description: "FOD URL"
+    required: True
   release-name:
+    description: "Release Name"
     required: true
   sdlc-status:
+    description: "SDLC Status"
     required: true
   application-type:
+    description: "Application Type"
     required: true
   application-criticality:
+    description: "Application criticality"
     required: true
+  entitlement-frequency:
+    description: "entitlement frequency"
+    required: True
+  entitlement-id:
+    description: "entitlement ID"
+    required: True
 runs:
   using: composite
   steps:
@@ -16,16 +29,58 @@ runs:
         sast-scan: true
         debricked-sca-scan: true
       env:
-        FOD_URL: ${{ env.FOD_URL }}
+        FOD_URL: ${{ inputs.fod-url }}
         FOD_CLIENT_ID: ${{ env.FOD_CLIENT_ID }}
         FOD_CLIENT_SECRET: ${{ env.FOD_CLIENT_SECRET }}
         FOD_LOGIN_EXTRA_OPTS: --socket-timeout=60s
-        FOD_RELEASE: ${{ github.event.repository.name }}:${{ inputs.release-name }}
         DO_SETUP: true
-        SETUP_EXTRA_OPTS: --oss --sdlc-status="${{ inputs.sdlc-status }}" --app-type="${{ inputs.application-type }}" --app-criticality="${{ inputs.application-criticality }}"
-        SAST_ASSESSMENT_TYPE: "Static Assessment"
-        FOD_SAST_SCAN_EXTRA_OPTS: ${{ env.FOD_SAST_SCAN_EXTRA_OPTS }}
-        DO_SCA_SCAN: true
-        # PACKAGE_EXTRA_OPTS: -oss
         DO_WAIT: true
         DO_POLICY_CHECK: true
+        FOD_RELEASE: ${{ github.event.repository.name }}:${{ inputs.release-name }}
+        SETUP_EXTRA_OPTS: |
+          --oss
+          --sdlc-status="${{ inputs.sdlc-status }}"
+          --app-type="${{ inputs.application-type }}"
+          --app-criticality="${{ inputs.application-criticality }}"
+          --app-description="Repository: ${{ github.server_url }}/${{ github.repository }}"
+          # --app-notify=""
+        SAST_ASSESSMENT_TYPE: "Static Assessment"
+        FOD_SAST_SCAN_EXTRA_OPTS: |
+          --oss
+          --entitlement-frequency="${{ inputs.entitlement-frequency }}"
+          --entitlement-id=${{ inputs.entitlement-id }}
+          --notes="Commit: ${{ github.sha }}"
+        DO_SCA_SCAN: true
+        PACKAGE_EXTRA_OPTS: |
+          -oss
+          -exclude="**/tests/**"
+          -exclude="**/node_modules/**"
+          -exclude="**/.venv/**"
+          -exclude="**/.pyenv/**"
+          -exclude="**/venv/**"
+          -exclude="**/__pycache__/**"
+          -exclude="**/.pytest_cache/**"
+          -exclude="**/.mypy_cache/**"
+          -exclude="**/.ruff_cache/**"
+          -exclude="**/.nox/**"
+          -exclude="**/.hypothesis/**"
+          -exclude="**/.eggs/**"
+          -exclude="**/*.egg-info/**"
+          -exclude="**/.tox/**"
+          -exclude="**/dist/**"
+          -exclude="**/build/**"
+          -exclude="**/coverage/**"
+          -exclude="**/htmlcov/**"
+          -exclude="**/.coverage*"
+          -exclude="**/vendor/**"
+          -exclude="**/var/cache/**"
+          -exclude="**/var/log/**"
+          -exclude="**/storage/**"
+          -exclude="**/bootstrap/cache/**"
+          -exclude="**/.phpunit.result.cache"
+          -exclude="**/bin/**"
+          -exclude="**/obj/**"
+          -exclude="**/TestResults/**"
+          -exclude="**/.vs/**"
+          -exclude="**/artifacts/**"
+        
