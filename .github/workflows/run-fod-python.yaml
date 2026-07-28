@@ -1,29 +1,30 @@
-name: AST Consumer with Poetry
+name: Fortify AST Workflow with Python and Poetry for SCA Resolution 
 on:
   workflow_call:
     inputs:
-      release-name:
-        required: True
-        type: string
       python-version:
         required: false
         default: "3.13"
         type: string
+      release-name:
+        required: True
+        type: string    
       sdlc-status:
-        description: Release SDLC Status
         required: false
+        type: string
         default: "Development"
-        type: string
       application-type:
-        description: Application Type
         required: false
-        default: "Web_Thick_Client"
         type: string
+        default: "Web"
       application-criticality:
-        description: Application Criticality Level
         required: false
-        default: "Medium"
         type: string
+        default: "Medium"
+      entitlement-frequency:
+        required: false
+        type: string
+        default: "Subscription"
 jobs:
   fortify:
     runs-on: ubuntu-latest
@@ -31,7 +32,7 @@ jobs:
       - name: Check out Repository
         uses: actions/checkout@v6
       # Setup Poetry
-      - name: Setup Poetry for Python ${{ inputs.python-version }}
+      - name: Setup Python With Poetry ${{ inputs.python-version }}
         uses: cmhmr/workflows-library/.github/actions/setup-python@main
         with:
           python-version: ${{ inputs.python-version }}
@@ -39,12 +40,13 @@ jobs:
       - name: Run Core Application Security SAST/SCA Scans
         uses: cmhmr/workflows-library/.github/actions/setup-fod@main
         with:
+          fod-url: ${{ vars.FOD_URL }}
           release-name: ${{ inputs.release-name }}
           sdlc-status: ${{ inputs.sdlc-status }}
           application-type: ${{ inputs.application-type }}
           application-criticality: ${{ inputs.application-criticality }}
+          entitlement-frequency: ${{ inputs.entitlement-frequency }}
+          entitlement-id: ${{ vars.FOD_ENTITLEMENT }}
         env:
-          FOD_URL: ${{ vars.FOD_URL }}
           FOD_CLIENT_ID: ${{ secrets.FOD_CLIENT_ID }}
           FOD_CLIENT_SECRET: ${{ secrets.FOD_CLIENT_SECRET }}
-          FOD_SAST_SCAN_EXTRA_OPTS: --oss --entitlement-frequency="Subscription" --entitlement-id=${{ vars.FOD_ENTITLEMENT }}
