@@ -42,14 +42,13 @@ runs:
           --sdlc-status="${{ inputs.sdlc-status }}"
           --app-type="${{ inputs.application-type }}"
           --app-criticality="${{ inputs.application-criticality }}"
-          --app-description="Repository: ${{ github.server_url }}/${{ github.repository }}"
-          # --app-notify=""
+          --app-description="Repository ${{ github.server_url }}/${{ github.repository }}"
         SAST_ASSESSMENT_TYPE: "Static Assessment"
         FOD_SAST_SCAN_EXTRA_OPTS: |
           --oss
           --entitlement-frequency="${{ inputs.entitlement-frequency }}"
           --entitlement-id=${{ inputs.entitlement-id }}
-          --notes="Commit: ${{ github.sha }}"
+          --notes="Commit ${{ github.sha }}"
         DO_SCA_SCAN: true
         PACKAGE_EXTRA_OPTS: |
           -oss
