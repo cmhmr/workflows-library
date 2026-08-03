@@ -11,6 +11,10 @@ on:
       runner-version:
         required: true
         type: string
+      shell:
+        required: false
+        type: string
+        default: bash
     # Node params
       node-version:
         required: true
@@ -48,6 +52,7 @@ jobs:
       - name: Node Workflow
         uses: cmhmr/workflows-library/.github/actions/setup-nodejs@main
         with:
+          shell: ${{ inputs.shell }}
           node-version: ${{ inputs.node-version }}
       # Run Fortify Scan
       - name: Run Core Application Security SAST/SCA Scans
