@@ -1,0 +1,13 @@
+name: Setup Node JS
+description: Setup Node JS
+inputs:
+  node-version:
+    required: true
+    type: string
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v7
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: "npm"
