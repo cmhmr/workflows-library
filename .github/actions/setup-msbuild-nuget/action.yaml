@@ -1,4 +1,5 @@
 name: Setup MSBuild, NuGet and Build Application Solution
+description: Setup MSBuild, NuGet and Build Application Solution
 inputs:
   sln-name:
     required: true
@@ -16,6 +17,6 @@ runs:
     - name: Restore NuGet packages
       run: nuget restore ${{inputs.sln-name}}
       shell: pwsh
-    - name: Build Solution: ${{inputs.sln-name}}
+    - name: Build Solution
       run: msbuild ${{inputs.sln-name}} /p:Configuration=${{inputs.configuration}}
       shell: pwsh
