@@ -7,6 +7,9 @@ inputs:
   shell:
     required: true
     type: string
+  folder:
+    required: true
+    type: string
 runs:
   using: composite
   steps:
@@ -14,8 +17,12 @@ runs:
       with:
         node-version: ${{ inputs.node-version }}
     - name: Install dependencies
-      run: npm install
+      run: |
+        cd ${{ inputs.folder }}
+        npm install
       shell: ${{ inputs.shell }}
     - name: Build project
-      run: npm run build
+      run: |
+        cd ${{ inputs.folder }}
+        npm run build
       shell: ${{ inputs.shell }}
