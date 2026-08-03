@@ -1,0 +1,22 @@
+name: Setup MSBuild, NuGet and Build Application Solution
+description: Setup MSBuild, NuGet and Build Application Solution
+inputs:
+  sln-name:
+    required: true
+  configuration:
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Setup MSBuild ${{inputs.msbuild-version}}
+      uses: microsoft/setup-msbuild@v3
+    
+    - name: Setup NuGet ${{inputs.nuget-version}}
+      uses: NuGet/setup-nuget@v4
+
+    - name: Restore NuGet packages
+      run: nuget restore ${{inputs.sln-name}}
+      shell: pwsh
+    - name: Build Solution ${{inputs.sln-name}}
+      run: msbuild ${{inputs.sln-name}} /p:Configuration=${{inputs.configuration}}
+      shell: pwsh
