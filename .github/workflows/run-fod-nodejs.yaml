@@ -52,6 +52,7 @@ jobs:
       - name: Node Workflow
         uses: cmhmr/workflows-library/.github/actions/setup-nodejs@main
         with:
+          folder: ${{ inputs.checkout-paths }}
           shell: ${{ inputs.shell }}
           node-version: ${{ inputs.node-version }}
       # Run Fortify Scan
