@@ -2,6 +2,10 @@ name: Fortify AST Workflow with MsBuild and NuGet
 on:
   workflow_call:
     inputs:
+      checkout-paths:
+        required: false
+        type: string
+        default: ''
     # Runner
       runner-version:
         required: true
@@ -40,7 +44,10 @@ jobs:
     steps:
       - name: Check out Repository
         uses: actions/checkout@v6
-      # Setup MSBuild
+        with:
+          sparse-checkout: ${{ inputs.checkout-paths }}
+          sparse-checkout-cone-mode: false
+      # Setup MSBuild for PHP
       - name: MSBuild Workflow
         uses: cmhmr/workflows-library/.github/actions/setup-msbuild-nuget@main
         with:
