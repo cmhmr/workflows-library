@@ -1,0 +1,65 @@
+name: Fortify AST Workflow with MsBuild and NuGet
+description: Fortify AST Workflow with MsBuild and NuGet
+on:
+  workflow_call:
+    inputs:
+      checkout-paths:
+        required: false
+        type: string
+        default: ''
+    # Runner Version: windows-2022|ubuntu-latest...
+      runner-version:
+        required: true
+        type: string
+    # Node params
+      node-version:
+        required: true
+        type: string
+    # Fortify AST params
+      release-name:
+        required: True
+        type: string    
+      sdlc-status:
+        required: false
+        type: string
+        default: "Development"
+      application-type:
+        required: false
+        type: string
+        default: "Web"
+      application-criticality:
+        required: false
+        type: string
+        default: "Medium"
+      entitlement-frequency:
+        required: false
+        type: string
+        default: "Subscription"
+jobs:
+  fortify:
+    runs-on: ${{ inputs.runner-version }}
+    steps:
+      - name: Check out Repository
+        uses: actions/checkout@v6
+        with:
+          sparse-checkout: ${{ inputs.checkout-paths }}
+          sparse-checkout-cone-mode: false
+      # Setup Node
+      - name: Node Workflow
+        uses: cmhmr/workflows-library/.github/actions/setup-nodejs@main
+        with:
+          node-version: ${{ inputs.node-version }}
+      # Run Fortify Scan
+      - name: Run Core Application Security SAST/SCA Scans
+        uses: cmhmr/workflows-library/.github/actions/setup-fod@main
+        with:
+          fod-url: ${{ vars.FOD_URL }}
+          release-name: ${{ inputs.release-name }}
+          sdlc-status: ${{ inputs.sdlc-status }}
+          application-type: ${{ inputs.application-type }}
+          application-criticality: ${{ inputs.application-criticality }}
+          entitlement-frequency: ${{ inputs.entitlement-frequency }}
+          entitlement-id: ${{ vars.FOD_ENTITLEMENT }}
+        env:
+          FOD_CLIENT_ID: ${{ secrets.FOD_CLIENT_ID }}
+          FOD_CLIENT_SECRET: ${{ secrets.FOD_CLIENT_SECRET }}
