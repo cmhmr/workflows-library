@@ -7,8 +7,8 @@ on:
         required: false
         type: string
         default: ''
-    # Runner Version: windows-2022|ubuntu-latest...
-      runner-version:
+    # Runner Params 
+      runner-version: # Version: windows-2022|ubuntu-latest...
         required: true
         type: string
       shell:
