@@ -3,10 +3,6 @@ description: Fortify AST Workflow with MsBuild and NuGet
 on:
   workflow_call:
     inputs:
-      checkout-paths:
-        required: false
-        type: string
-        default: ''
     # Runner Params 
       runner-version: # Version: windows-2022|ubuntu-latest...
         required: true
@@ -15,6 +11,10 @@ on:
         required: false
         type: string
         default: bash
+      checkout-paths:
+        required: false
+        type: string
+        default: ''
     # Node params
       node-version:
         required: true
