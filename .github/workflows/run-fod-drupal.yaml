@@ -36,6 +36,10 @@ on:
         required: false
         type: string
         default: "Subscription"
+      package-extra-opts:
+        required: false
+        type: string
+        default: ""
 jobs:
   fortify:
     runs-on: ${{ inputs.runner-version }}
@@ -61,6 +65,7 @@ jobs:
           application-criticality: ${{ inputs.application-criticality }}
           entitlement-frequency: ${{ inputs.entitlement-frequency }}
           entitlement-id: ${{ vars.FOD_ENTITLEMENT }}
+          package-extra-opts: ${{ inputs.package-extra-opts }}
         env:
           FOD_CLIENT_ID: ${{ secrets.FOD_CLIENT_ID }}
           FOD_CLIENT_SECRET: ${{ secrets.FOD_CLIENT_SECRET }}
