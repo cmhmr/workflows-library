@@ -1,10 +1,12 @@
-name: Fortify AST Workflow with Python and Poetry for SCA Resolution 
+name: Fortify AST Workflow For Python with Poetry
+description: Fortify AST Workflow For Python with Poetry
 on:
   workflow_call:
     inputs:
       runner-version:
-        required: true
+        required: false
         type: string
+        default: ubuntu-latest
       checkout-paths:
         required: false
         type: string
@@ -32,6 +34,10 @@ on:
         required: false
         type: string
         default: "Subscription"
+      package-extra-opts:
+        required: false
+        type: string
+        default: ""
 jobs:
   fortify:
     runs-on: ${{ inputs.runner-version }}
@@ -43,12 +49,12 @@ jobs:
           sparse-checkout-cone-mode: false
       # Setup Poetry
       - name: Setup Python With Poetry ${{ inputs.python-version }}
-        uses: cmhmr/workflows-library/.github/actions/setup-python@main
+        uses: BeamSuntoryInc/FortifySastWorkflow/.github/actions/setup-python@main
         with:
           python-version: ${{ inputs.python-version }}
       # Run Fortify Scan
       - name: Run Core Application Security SAST/SCA Scans
-        uses: cmhmr/workflows-library/.github/actions/setup-fod@main
+        uses: BeamSuntoryInc/FortifySastWorkflow/.github/actions/setup-fod@main
         with:
           fod-url: ${{ vars.FOD_URL }}
           release-name: ${{ inputs.release-name }}
@@ -57,6 +63,7 @@ jobs:
           application-criticality: ${{ inputs.application-criticality }}
           entitlement-frequency: ${{ inputs.entitlement-frequency }}
           entitlement-id: ${{ vars.FOD_ENTITLEMENT }}
+          package-extra-opts: ${{ inputs.package-extra-opts }}
         env:
           FOD_CLIENT_ID: ${{ secrets.FOD_CLIENT_ID }}
           FOD_CLIENT_SECRET: ${{ secrets.FOD_CLIENT_SECRET }}
