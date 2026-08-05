@@ -1,12 +1,13 @@
-name: Fortify AST Workflow with MsBuild and NuGet
-description: Fortify AST Workflow with MsBuild and NuGet
+name: Fortify AST Workflow with NodeJS
+description: Fortify AST Workflow with NodeJS
 on:
   workflow_call:
     inputs:
     # Runner Params 
       runner-version: # Version: windows-2022|ubuntu-latest...
-        required: true
+        required: false
         type: string
+        default: ubuntu-latest
       shell:
         required: false
         type: string
@@ -39,6 +40,10 @@ on:
         required: false
         type: string
         default: "Subscription"
+      package-extra-opts:
+        required: false
+        type: string
+        default: ""
 jobs:
   fortify:
     runs-on: ${{ inputs.runner-version }}
@@ -50,14 +55,14 @@ jobs:
           sparse-checkout-cone-mode: false
       # Setup Node
       - name: Node Workflow
-        uses: cmhmr/workflows-library/.github/actions/setup-nodejs@main
+        uses: BeamSuntoryInc/FortifySastWorkflow/.github/actions/setup-nodejs@main
         with:
           folder: ${{ inputs.checkout-paths }}
           shell: ${{ inputs.shell }}
           node-version: ${{ inputs.node-version }}
       # Run Fortify Scan
       - name: Run Core Application Security SAST/SCA Scans
-        uses: cmhmr/workflows-library/.github/actions/setup-fod@main
+        uses: BeamSuntoryInc/FortifySastWorkflow/.github/actions/setup-fod@main
         with:
           fod-url: ${{ vars.FOD_URL }}
           release-name: ${{ inputs.release-name }}
@@ -66,6 +71,7 @@ jobs:
           application-criticality: ${{ inputs.application-criticality }}
           entitlement-frequency: ${{ inputs.entitlement-frequency }}
           entitlement-id: ${{ vars.FOD_ENTITLEMENT }}
+          package-extra-opts: ${{ inputs.package-extra-opts }}
         env:
           FOD_CLIENT_ID: ${{ secrets.FOD_CLIENT_ID }}
           FOD_CLIENT_SECRET: ${{ secrets.FOD_CLIENT_SECRET }}
