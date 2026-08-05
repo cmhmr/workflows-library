@@ -49,12 +49,12 @@ jobs:
           sparse-checkout-cone-mode: false
       # Setup Poetry
       - name: Setup Python With Poetry ${{ inputs.python-version }}
-        uses: BeamSuntoryInc/FortifySastWorkflow/.github/actions/setup-python@main
+        uses: cmhmr/workflows-library/.github/actions/setup-python@main
         with:
           python-version: ${{ inputs.python-version }}
       # Run Fortify Scan
       - name: Run Core Application Security SAST/SCA Scans
-        uses: BeamSuntoryInc/FortifySastWorkflow/.github/actions/setup-fod@main
+        uses: cmhmr/workflows-library/.github/actions/setup-fod@main
         with:
           fod-url: ${{ vars.FOD_URL }}
           release-name: ${{ inputs.release-name }}
