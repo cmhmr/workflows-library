@@ -21,7 +21,11 @@ inputs:
     required: True
   entitlement-id:
     description: "entitlement ID"
-    required: True
+    required: true
+  package-extra-opts:
+    required: false
+    type: string
+    default: ''
 runs:
   using: composite
   steps:
@@ -60,26 +64,12 @@ runs:
           -exclude="**/__pycache__/**"
           -exclude="**/.pytest_cache/**"
           -exclude="**/.mypy_cache/**"
-          -exclude="**/.ruff_cache/**"
-          -exclude="**/.nox/**"
-          -exclude="**/.hypothesis/**"
           -exclude="**/.eggs/**"
           -exclude="**/*.egg-info/**"
-          -exclude="**/.tox/**"
-          -exclude="**/dist/**"
-          -exclude="**/build/**"
-          -exclude="**/coverage/**"
-          -exclude="**/htmlcov/**"
-          -exclude="**/.coverage*"
           -exclude="**/vendor/**"
           -exclude="**/var/cache/**"
           -exclude="**/var/log/**"
-          -exclude="**/storage/**"
-          -exclude="**/bootstrap/cache/**"
           -exclude="**/.phpunit.result.cache"
-          -exclude="**/bin/**"
-          -exclude="**/obj/**"
           -exclude="**/TestResults/**"
-          -exclude="**/.vs/**"
-          -exclude="**/artifacts/**"
+          ${{ inputs.package-extra-opts }}
         
