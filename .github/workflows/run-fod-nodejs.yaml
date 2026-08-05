@@ -55,14 +55,14 @@ jobs:
           sparse-checkout-cone-mode: false
       # Setup Node
       - name: Node Workflow
-        uses: BeamSuntoryInc/FortifySastWorkflow/.github/actions/setup-nodejs@main
+        uses: cmhmr/workflows-library/.github/actions/setup-nodejs@main
         with:
           folder: ${{ inputs.checkout-paths }}
           shell: ${{ inputs.shell }}
           node-version: ${{ inputs.node-version }}
       # Run Fortify Scan
       - name: Run Core Application Security SAST/SCA Scans
-        uses: BeamSuntoryInc/FortifySastWorkflow/.github/actions/setup-fod@main
+        uses: cmhmr/workflows-library/.github/actions/setup-fod@main
         with:
           fod-url: ${{ vars.FOD_URL }}
           release-name: ${{ inputs.release-name }}
