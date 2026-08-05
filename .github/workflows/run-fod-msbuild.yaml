@@ -1,15 +1,21 @@
 name: Fortify AST Workflow with MsBuild and NuGet
+description: Fortify AST Workflow with MsBuild and NuGet
 on:
   workflow_call:
     inputs:
+    # Runner Params
       checkout-paths:
         required: false
         type: string
         default: ''
-    # Runner
-      runner-version:
-        required: true
+      runner-version: # Version: windows-2022|ubuntu-latest...
+        required: false
         type: string
+        default: windows-2022
+      shell:
+        required: false
+        type: string
+        default: pwsh
     # MSBuild params
       sln-name:
         required: true
@@ -38,6 +44,10 @@ on:
         required: false
         type: string
         default: "Subscription"
+      package-extra-opts:
+        required: false
+        type: string
+        default: ""
 jobs:
   fortify:
     runs-on: ${{ inputs.runner-version }}
@@ -47,15 +57,16 @@ jobs:
         with:
           sparse-checkout: ${{ inputs.checkout-paths }}
           sparse-checkout-cone-mode: false
-      # Setup MSBuild for PHP
+      # Setup MSBuild
       - name: MSBuild Workflow
-        uses: cmhmr/workflows-library/.github/actions/setup-msbuild-nuget@main
+        uses: BeamSuntoryInc/FortifySastWorkflow/.github/actions/setup-msbuild-nuget@main
         with:
+          shell: ${{ inputs.shell }}
           sln-name: ${{ inputs.sln-name }}
           configuration: ${{ inputs.configuration }}
       # Run Fortify Scan
       - name: Run Core Application Security SAST/SCA Scans
-        uses: cmhmr/workflows-library/.github/actions/setup-fod@main
+        uses: BeamSuntoryInc/FortifySastWorkflow/.github/actions/setup-fod@main
         with:
           fod-url: ${{ vars.FOD_URL }}
           release-name: ${{ inputs.release-name }}
@@ -64,6 +75,7 @@ jobs:
           application-criticality: ${{ inputs.application-criticality }}
           entitlement-frequency: ${{ inputs.entitlement-frequency }}
           entitlement-id: ${{ vars.FOD_ENTITLEMENT }}
+          package-extra-opts: ${{ inputs.package-extra-opts}}
         env:
           FOD_CLIENT_ID: ${{ secrets.FOD_CLIENT_ID }}
           FOD_CLIENT_SECRET: ${{ secrets.FOD_CLIENT_SECRET }}
